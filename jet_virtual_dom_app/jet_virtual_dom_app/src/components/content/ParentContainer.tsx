@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import { ListView } from "./VisionAIResultView";
-import { FormElements } from "./ObjectStorageForm";
+import { ResultsView } from "./VisionAIResultView";
+import { ObjectStorageForm } from "./ObjectStorageForm";
 type attr = {
   bucketName?: string | undefined;
   selectImage?: string| undefined;
@@ -18,10 +18,10 @@ const [formData, setFormData] = useState<attr | null>({
     setFormData(data);
   };
 return (
-    <div id="parentContainer" class="oj-flex oj-flex-init parent-container" style={{ marginLeft: '100px' }} >
+    <div id="parentContainer" class="oj-flex oj-flex-init parent-container parent-container-margin" >
       <div class="separator-line"></div>
-     <FormElements  onActivityChanged={activityChangedHandler}/>
-     {formData && <ListView  activity={formData} />}
+     <ObjectStorageForm  onActivityChanged={activityChangedHandler}/>
+     {formData && <ResultsView  activity={formData} />}
     
     </div>
   );
