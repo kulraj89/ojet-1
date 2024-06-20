@@ -1,6 +1,5 @@
 import { h, ComponentProps } from "preact";
-import { useState, useRef ,useEffect} from "preact/hooks";
-import * as ConverterUtilsI18n from "ojs/ojconverterutils-i18n";
+import { useState, useRef} from "preact/hooks";
 import MutableArrayDataProvider = require("ojs/ojmutablearraydataprovider");
 import "ojs/ojbutton";
 import "ojs/ojcheckboxset";
@@ -48,7 +47,7 @@ const lblHint: InputTextProps["labelHint"] = "Bucket Name";
 let value: string = "Your Bucket Name";
 let name: string = "Your Region";
 
-export function FormElements(props: Props){
+export function ObjectStorageForm(props: Props){
   const imageData = useRef(
     new MutableArrayDataProvider<ImageObjectList["value"], ImageObjectList>([{ id: 1, value: "All", label: "All" }], {
       keyAttributes: "value" ,
@@ -88,7 +87,6 @@ export function FormElements(props: Props){
         setIsSelectImageDisabled(false);
     })
     .catch((error) => {
-        console.error("Error fetching LOV data:", error);
         event.preventDefault();
         dialogRef.current!.open();
     });
@@ -128,7 +126,6 @@ export function FormElements(props: Props){
   }
   const onSubmit = async (event: ojButton.ojAction) => {
     try {
-      console.log("formData: " + JSON.stringify(formData));
       await props.onActivityChanged(formData); 
     } catch (error) {
       console.error("Error:", error);
@@ -142,7 +139,7 @@ export function FormElements(props: Props){
 
   return (
     <div class="oj-flex-item oj-md-6">
-       <h2 style={{ fontWeight: 'bold' }}>Object Storage Details</h2>
+       <div class="oj-typography-subheading-md">Object Storage Details</div>
       <oj-form-layout
         userAssistanceDensity={density}
         labelEdge="inside"
@@ -171,7 +168,7 @@ export function FormElements(props: Props){
           disabled={isSelectImageDisabled}
           onvalueChanged={onChange}></oj-select-single>
           {!isDisabled && (
-         <img src={imageUrl} alt="placeholder" style={{ maxWidth: "450px" }} />
+         <img src={imageUrl} alt="placeholder" width={450}/>
            )}
         <oj-button onojAction={onSubmit} disabled={isDisabled}>
          Submit
