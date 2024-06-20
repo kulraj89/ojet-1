@@ -36,7 +36,7 @@ const listItemRenderer = (item: ojListView.ItemTemplateContext) => {
     </div>
   );
 };
-export function ListView(props: Props) {
+export function ResultsView(props: Props) {
   const [data, setData] = useState(initialState);
   const [lovData, setLovData] = useState({
     selectedValue: ""
@@ -44,12 +44,10 @@ export function ListView(props: Props) {
   const url = props.activity?.selectImage;
   const regionName = props.activity?.regionName;
   const bucketName = props.activity?.bucketName;
-  console.log("regionName", regionName);
   let imageName: string = "";
   if (url) {
     let parts = url.split("/");
     imageName = parts.length > 0 ? parts[parts.length - 1] : "No image name found";
-    console.log(imageName);
   }
   if (imageName) {
     const serviceUrl = `http://localhost:8080/ai/vision/image?object=${imageName}&bucket=${bucketName}&region=${regionName}`;
@@ -78,11 +76,10 @@ export function ListView(props: Props) {
     // Use regex to find all numbers in the text
     const regex = /\b\d+\b/g;
     // Replace each number with a span containing the number, styled to be yellow
-    return text.replace(regex, (match) => `<span style="background-color: yellow">${match}</span>`);
+    return text.replace(regex, (match) => `<span class="background-yellow">${match}</span>`);
   };
   const [filteredText, setFilteredText] = useState(combinedText);
   const filterText = (value: string) => {
-    console.log(value);
     if (value === "numbersOnly") {
       // Filter only numbers from the combined text
       const regex = /\b\d+\b/g;
@@ -96,7 +93,6 @@ export function ListView(props: Props) {
   const selectRef = useRef<any>(null);
   const onFilterChange = (event: any) => {
     const value = event.detail.value;
-    console.log("event.detail.value", event.detail.value);
     setLovData(prevState => ({
       ...prevState,
       selectedValue: value
@@ -110,36 +106,38 @@ export function ListView(props: Props) {
 
   return (
     <>
-      <div class="oj-flex-item oj-sm-padding-12x-start oj-md-6 oj-sm-12">
-        <h1 style={{ fontWeight: 'bold' }}>Vision AI Result</h1>
-        <div style={{ marginLeft: '20px' }}> 
-          <h2 style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Object detection({objectNames.length})</h2>
-          <div>
-            <oj-list-view id="itemsList" class="item-display"
-              aria-labelledby="activitiesHeader"
-              aria-label="list of objects"
-              data={dataProvider}
-              gridlines={gridlinesItemVisible}
-              selectionMode="multiple"
-              scrollPolicy="loadMoreOnScroll"
-              scrollPolicyOptions={scrollPolicyOpts}>
-              <template slot="itemTemplate" render={listItemRenderer}></template>
-            </oj-list-view>
-          </div>
-          <h2 style={{ fontWeight: 'bold', fontSize: '1.1em' }}>Text detection</h2>
-          <div> <div>
-              <label style={{ fontSize: '14px', marginBottom: '10px' }}> Filter Result:</label>
-              <oj-select-single
-                ref={selectRef}
-                data={optionsDataProvider}
-                value={lovData.selectedValue}
-                onvalueChanged={onFilterChange}
-                style={{ maxWidth: '200px', paddingLeft: '14px' }}
-              ></oj-select-single>
-            </div>
-          </div>
-          <div>
-            <div dangerouslySetInnerHTML={{ __html: highlightNumbers(filteredText ? filteredText : combinedText) }}></div></div>
-        </div>
+    <div class="oj-flex-item oj-sm-padding-12x-start oj-md-6 oj-sm-12">
+  <h1 class="oj-typography-subheading-md">Vision AI Result</h1>
+  <div class="margin-left-20"> 
+    <div class="oj-typography-subheading-xs">Object detection({objectNames.length})</div>
+    <div>
+      <oj-list-view id="itemsList" class="item-display"
+        aria-labelledby="activitiesHeader"
+        aria-label="list of objects"
+        data={dataProvider}
+        gridlines={gridlinesItemVisible}
+        selectionMode="multiple"
+        scrollPolicy="loadMoreOnScroll"
+        scrollPolicyOptions={scrollPolicyOpts}>
+        <template slot="itemTemplate" render={listItemRenderer}></template>
+      </oj-list-view>
+    </div>
+    <div class="oj-typography-subheading-xs">Text detection</div>
+    <div>
+      <div>
+        <label class="label">Filter Result:</label>
+        <oj-select-single
+          ref={selectRef}
+          data={optionsDataProvider}
+          value={lovData.selectedValue}
+          onvalueChanged={onFilterChange}
+          class="select-single-style"
+        ></oj-select-single>
       </div>
-    </>);}
+    </div>
+    <div>
+      <div dangerouslySetInnerHTML={{ __html: highlightNumbers(filteredText ? filteredText : combinedText) }}></div>
+    </div>
+  </div>
+</div>
+ </>);}
